@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>moshuu。ink-%</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
+  <script src="https://unpkg.com/ml5@0.12.2/dist/ml5.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <button id="connect-button">🔌 Connect</button>
+  <input id="inputBox" placeholder="Type your text here…" />
+  <button id="saveBtn">Save</button>
+  <button id="downloadBtn">Download</button>
+  <button id="resetBtn">Reset</button>
+  <div id="data" style="position:absolute; top:40px; left:10px;">waiting...</div>
+  <script src="sketch.js"></script>
+</body>
+
+</html>
