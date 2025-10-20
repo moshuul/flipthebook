@@ -1,0 +1,386 @@
+/* ================================
+   flip_style.css  (responsive)
+   Layout: Navbar / Left / Spread / Info / Footer
+   Spread = 一整张白纸 + 中缝书脊（细暗带 + 1px 亮线）
+   ================================ */
+
+/* -------- Responsive tokens -------- */
+:root {
+    /* 布局尺寸 */
+    --max-w: 1680px;
+    --left-w: clamp(150px, 14vw, 240px);
+    /* 左侧控制栏宽 */
+    --info-w: clamp(240px, 20vw, 340px);
+    /* 右侧信息栏宽 */
+    --gap: clamp(12px, 2vw, 24px);
+    /* 栏间距/外边距 */
+
+    --top-h: clamp(44px, 6vh, 56px);
+    --footer-h: clamp(20px, 3vh, 28px);
+
+    /* 白纸圆角 / 内边距 */
+    --radius: clamp(12px, 1.6vw, 20px);
+    --pad: clamp(12px, 1.2vw, 18px);
+
+    /* 书脊视觉参数（可微调） */
+    --spine-dark-w: clamp(12px, 1.2vw, 18px);
+    /* 暗带宽度（细） */
+    --spine-dark-blur: clamp(0.8px, .18vw, 1.6px);
+    --spine-dark-opacity: .75;
+    /* 0.55~0.85 建议 */
+    --spine-light-opacity: .9;
+    /* 中心 1px 亮线透明度 */
+}
+
+/* ---------- Base ---------- */
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    background: #000;
+    /* 黑底 */
+    color: #eaeaea;
+    font: 14px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Noto Sans", sans-serif;
+}
+
+/* ---------- App frame (3 列) ---------- */
+.frame {
+    width: min(100%, var(--max-w));
+    margin: 0 auto;
+    min-height: 100vh;
+
+    display: grid;
+    grid-template-rows: var(--top-h) 1fr var(--footer-h);
+    grid-template-columns: var(--left-w) 1fr var(--info-w);
+    grid-template-areas:
+        "navbar navbar navbar"
+        "left   spread  info"
+        "footer footer footer";
+    column-gap: var(--gap);
+}
+
+/* ---------- Navbar ---------- */
+.navbar {
+    grid-area: navbar;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 0 var(--gap);
+}
+
+.brand {
+    justify-self: start;
+    font-weight: 600;
+    opacity: .9;
+}
+
+.center-nav {
+    justify-self: center;
+    display: flex;
+    gap: clamp(14px, 1.8vw, 26px);
+}
+
+.center-nav a {
+    color: #eaeaea;
+    text-decoration: none;
+    opacity: .85;
+}
+
+.center-nav a:hover {
+    opacity: 1;
+}
+
+.publish {
+    justify-self: end;
+    color: #eaeaea;
+    text-decoration: none;
+    opacity: .8;
+}
+
+/* ---------- Left controls ---------- */
+.left {
+    grid-area: left;
+    padding: 8px 12px;
+}
+
+.left label {
+    display: block;
+    font-size: 13px;
+    margin: 18px 0 6px;
+}
+
+.slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: calc(var(--left-w) - 24px);
+    height: 2px;
+    background: #bdbdbd;
+    border-radius: 2px;
+    outline: none;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #fff;
+    border: 1px solid #9a9a9a;
+}
+
+.actions {
+    display: grid;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.actions button {
+    background: rgba(255, 255, 255, .08);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, .2);
+    padding: 6px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.actions button:hover {
+    background: rgba(255, 255, 255, .14);
+}
+
+/* ---------- Spread （一整张白纸 + 书脊） ---------- */
+.spread {
+    grid-area: spread;
+    position: relative;
+
+    /* 关键：整张白纸由 spread 自身绘制 */
+    background: #fff;
+    border-radius: var(--radius);
+    margin: var(--gap);
+    overflow: hidden;
+
+    /* 内部两列：左页画布 / 右页空白（不再各自上色） */
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    align-items: stretch;
+
+    /* 高度占满中间行 */
+    min-height: calc(100vh - var(--top-h) - var(--footer-h) - var(--gap)*2);
+}
+
+/* 两个“页”的容器，不再有阴影/背景 */
+.page {
+    position: relative;
+    background: transparent;
+    box-shadow: none;
+}
+
+/* 画布容器：保留纯白背景（无阴影），圆角略小一号 */
+.canvas-host {
+    position: absolute;
+    inset: var(--pad);
+    background: #fff;
+    border-radius: clamp(8px, 1vw, 12px);
+    box-shadow: none;
+}
+
+/* ---- 书脊：细暗带 + 1px 高光线 ---- */
+/* 暗带（柔和、极细、贴合中线） */
+.spread::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    height: 100%;
+    width: var(--spine-dark-w);
+    pointer-events: none;
+    z-index: 1;
+    background: radial-gradient(ellipse at center,
+            rgba(0, 0, 0, .30) 0%,
+            rgba(0, 0, 0, .18) 28%,
+            rgba(0, 0, 0, .08) 55%,
+            rgba(0, 0, 0, 0) 100%);
+    filter: blur(var(--spine-dark-blur));
+    opacity: var(--spine-dark-opacity);
+    mix-blend-mode: multiply;
+}
+
+/* 中心 1px 亮线（折痕高光） */
+.spread::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    height: 100%;
+    width: 1px;
+    background: rgba(255, 255, 255, var(--spine-light-opacity));
+    filter: blur(.6px);
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* ---------- Right info（独立在黑底） ---------- */
+.info {
+    grid-area: info;
+    align-self: start;
+    padding-top: clamp(16px, 2vh, 28px);
+    padding-right: var(--gap);
+    color: #dedede;
+    max-width: var(--info-w);
+}
+
+.info .title {
+    margin: 0 0 6px;
+    font-size: clamp(15px, 1.2vw, 16px);
+    color: #fff;
+}
+
+.info .date {
+    font-size: 12px;
+    opacity: .85;
+    margin-bottom: 10px;
+}
+
+.info .desc {
+    margin: 0;
+    font-size: clamp(13px, 1.1vw, 14px);
+    line-height: 1.6;
+    color: #eaeaea;
+    opacity: .9;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+    grid-area: footer;
+    align-self: end;
+    justify-self: start;
+    padding-left: 16px;
+    color: rgba(255, 255, 255, .7);
+    font-size: 12px;
+}
+
+/* ---------- 小屏：右侧信息落到下方 ---------- */
+@media (max-width: 1024px) {
+    .frame {
+        grid-template-columns: minmax(140px, var(--left-w)) 1fr;
+        grid-template-areas:
+            "navbar navbar"
+            "left   spread"
+            "footer footer";
+    }
+
+    .info {
+        grid-column: 1 / -1;
+        padding: 12px var(--gap) 0;
+        max-width: 680px;
+        justify-self: end;
+        /* 仍靠右 */
+    }
+}
+
+/* ---------- 极小屏安全处理 ---------- */
+@media (max-width: 640px) {
+    :root {
+        --left-w: 42vw;
+        /* 左栏更窄 */
+        --info-w: 58vw;
+        /* 右栏宽度在下方时的最大宽 */
+        --gap: 10px;
+        --radius: 12px;
+    }
+
+    .center-nav {
+        display: none;
+    }
+
+    /* 顶部只保留 brand / publish */
+}
+
+/* =========================
+   PURE CSS "BOOK SPINE"
+   黑芯 + 模糊衰减 + 中心亮线
+   直接贴到 flip_style.css 末尾
+   需：.spread { position:relative; overflow:hidden; background:#fff; }
+   ========================= */
+
+/* 可调参数 */
+:root {
+    --spine-core-w: clamp(3px, 0.40vw, 6px);
+    /* 黑芯宽度（越小越细） */
+    --spine-core-blur: clamp(1px, .22vw, 2px);
+    /* 黑芯模糊 */
+    --spine-core-opacity: .9;
+    /* 黑芯整体强度 .7~1.0 */
+
+    --spine-hi-w: 1px;
+    /* 亮线宽度 1~2px */
+    --spine-hi-blur: .7px;
+    /* 亮线模糊 */
+    --spine-hi-opacity: .92;
+    /* 亮线强度 .75~.95 */
+
+    /* （可选）两侧轻内阴影，让靠缝位置更立体 */
+    --spine-side-shadow: .16;
+    /* 0 关闭 / .12~.22 推荐 */
+}
+
+/* —— 黑芯（左右渐隐，居中一条窄暗带） —— */
+.spread::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 50%;
+    transform: translateX(-50%);
+    width: var(--spine-core-w);
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    /* 中心最黑，向两侧快速衰减到透明 */
+    background: linear-gradient(to right,
+            rgba(0, 0, 0, 0) 0%,
+            rgba(0, 0, 0, .34) 46%,
+            rgba(0, 0, 0, .42) 50%,
+            rgba(0, 0, 0, .34) 54%,
+            rgba(0, 0, 0, 0) 100%);
+    filter: blur(var(--spine-core-blur));
+    opacity: var(--spine-core-opacity);
+    mix-blend-mode: multiply;
+    /* 与纸面相乘，更自然 */
+}
+
+/* —— 中心亮线（1px 高光，纵向两端渐隐） —— */
+.spread::after {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 50%;
+    transform: translateX(-50%);
+    width: var(--spine-hi-w);
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    background: linear-gradient(to bottom,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, var(--spine-hi-opacity)) 10%,
+            rgba(255, 255, 255, 1) 50%,
+            rgba(255, 255, 255, var(--spine-hi-opacity)) 90%,
+            rgba(255, 255, 255, 0) 100%);
+    filter: blur(var(--spine-hi-blur));
+    mix-blend-mode: screen;
+    /* 亮度更像高光 */
+}
+
+/* ——（可选）纸面两侧非常轻的内阴影 —— */
+.spread {
+    box-shadow:
+        inset 22px 0 34px -30px rgba(0, 0, 0, var(--spine-side-shadow)),
+        inset -22px 0 34px -30px rgba(0, 0, 0, var(--spine-side-shadow));
+}
