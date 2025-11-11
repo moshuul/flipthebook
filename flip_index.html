@@ -3,20 +3,86 @@
 
 <head>
   <meta charset="UTF-8" />
-  <title>moshuu。ink-%</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ink% · Spread</title>
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="flip_style.css" />
+
+  <!-- 库（必须在你自己的 JS 之前引入） -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
   <script src="https://unpkg.com/ml5@0.12.2/dist/ml5.min.js"></script>
-  <link rel="stylesheet" href="style.css" />
+
+  <!-- 数据层（预设/版式/文段） -->
+  <script src="data.js"></script>
+
+  <!-- 主逻辑（无串口） -->
+  <script src="flip_sketch.js" defer></script>
 </head>
 
 <body>
-  <button id="connect-button">🔌 Connect</button>
-  <input id="inputBox" placeholder="Type your text here…" />
-  <button id="saveBtn">Save</button>
-  <button id="downloadBtn">Download</button>
-  <button id="resetBtn">Reset</button>
-  <div id="data" style="position:absolute; top:40px; left:10px;">waiting...</div>
-  <script src="sketch.js"></script>
+  <main class="frame">
+    <!-- NAVBAR -->
+    <nav class="navbar" aria-label="Primary">
+      <div class="brand">ink%</div>
+      <div class="center-nav">
+        <a href="#">Templates</a>
+        <a href="#">About</a>
+        <a href="#">Gallery</a>
+      </div>
+      <a class="publish" href="#">Publish</a>
+    </nav>
+
+    <!-- LEFT CONTROLS -->
+    <aside class="left" aria-label="Controls">
+      <label class="control-label" for="fontSlider">Font Size</label>
+      <input id="fontSlider" class="slider" type="range" min="8" max="72" value="18" />
+
+      <label class="control-label" for="waveSlider">Wave</label>
+      <input id="waveSlider" class="slider" type="range" min="0" max="50" value="4" />
+
+      <label class="control-label" for="blurSlider">Blur</label>
+      <input id="blurSlider" class="slider" type="range" min="0" max="50" value="0" />
+
+      <!-- 新增：版式与预设选择 -->
+      <label class="control-label" for="formatSelect">Format</label>
+      <select id="formatSelect" class="select"></select>
+
+      <label class="control-label" for="presetSelect">Preset</label>
+      <select id="presetSelect" class="select"></select>
+
+      <div class="actions">
+        <button id="saveBtn" type="button">Save</button>
+        <button id="downloadBtn" type="button">Download</button>
+        <button id="resetBtn" type="button">Reset</button>
+      </div>
+    </aside>
+
+    <!-- SPREAD -->
+    <section id="community" class="spread is-spread" aria-label="Book spread">
+      <div class="page card canvas-card">
+        <div id="canvasHost" class="canvas-host" aria-label="Canvas host"></div>
+      </div>
+      <div class="page card right-page">
+
+        <textarea id="inputBox" placeholder="Type your paragraph here…" style="width:100%;height:100%;border:0;outline:none;resize:none; padding:24px;
+                 font:14px/1.6 'Avenir Next',sans-serif;color:#111;"></textarea>
+      </div>
+    </section>
+
+    <!-- INFO -->
+    <aside class="info" aria-labelledby="info-title">
+      <h2 id="info-title" class="title">Title</h2>
+      <div class="date">00/00/0000</div>
+      <p class="desc">
+        Use presets to load passages & formats. Shortcuts: S-save, D-download, R-reset,
+        [ / ] font, 1/2 wave, 3/4 blur.
+      </p>
+    </aside>
+
+    <!-- FOOTER -->
+    <footer class="footer">Mengshu Liu · @moshuu | 2025</footer>
+  </main>
 </body>
 
 </html>
