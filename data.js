@@ -1,4 +1,4 @@
-// data.js —— 文段 / 版式 / 预设（完整且可直接用）
+
 window.inkData = {
     passages: [
         {
@@ -51,5 +51,5 @@ pages breathe in light`
     ]
 };
 
-// 方便排查：在控制台确认加载成功
+
 console.log("[ink%] inkData loaded:", window.inkData);
